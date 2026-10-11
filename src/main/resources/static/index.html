@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneStep — Mobility & AI Media</title>
+
+    <style>
+        :root {
+            --bg: #080d1d;
+            --card: #131e3b;
+            --green: #c8ff35;
+            --blue: #728cff;
+            --text: #f4f7ff;
+            --muted: #a9b6d4;
+            --border: rgba(255,255,255,.13);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: Arial, sans-serif;
+            color: var(--text);
+            background: radial-gradient(circle at 80% 0%, #1c2b56, transparent 35%), var(--bg);
+            line-height: 1.6;
+        }
+        button, input, select { font: inherit; }
+        button { cursor: pointer; }
+        a { color: inherit; text-decoration: none; }
+        .container { width: min(1150px, 92%); margin: auto; }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(8,13,29,.96);
+            border-bottom: 1px solid var(--border);
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            padding: 16px 0;
+        }
+        .logo { font-size: 28px; font-weight: 900; }
+        .logo span { color: var(--green); }
+        nav { display: flex; gap: 18px; flex-wrap: wrap; }
+        nav a { color: var(--muted); }
+        nav a:hover { color: var(--green); }
+        .nav-actions { display: flex; gap: 10px; align-items: center; }
+
+        input, select {
+            width: 100%;
+            padding: 13px;
+            background: #0b1530;
+            color: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            outline: none;
+        }
+        input:focus, select:focus { border-color: var(--green); }
+        .language { width: auto; }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 0;
+            border-radius: 12px;
+            padding: 12px 19px;
+            font-weight: bold;
+            transition: .2s;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .btn-green { background: var(--green); color: #101526; }
+        .btn-blue { background: var(--blue); color: white; }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: white; }
+
+        section { padding: 65px 0; scroll-margin-top: 100px; }
+        .hero {
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            align-items: center;
+            gap: 35px;
+            padding-top: 85px;
+        }
+        .eyebrow {
+            color: var(--green);
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        h1 {
+            font-size: clamp(38px, 6vw, 65px);
+            line-height: 1.1;
+            margin: 18px 0;
+        }
+        h1 span { color: var(--green); }
+        p { color: var(--muted); }
+        .hero p { margin-bottom: 24px; font-size: 17px; }
+        .hero-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+
+        .hero-visual {
+            min-height: 310px;
+            position: relative;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            background: linear-gradient(135deg, #304d89, #101a35);
+        }
+        .big-car { font-size: 110px; animation: floatCar 3s ease-in-out infinite; }
+        .road {
+            position: absolute;
+            bottom: 30px;
+            height: 70px;
+            width: 120%;
+            background: #26314c;
+            border-top: 3px dashed white;
+            transform: rotate(-7deg);
+        }
+        .small-car {
+            position: absolute;
+            bottom: 45px;
+            left: -60px;
+            font-size: 35px;
+            animation: drive 7s linear infinite;
+        }
+        @keyframes floatCar {
+            50% { transform: translateY(-12px); }
+        }
+        @keyframes drive {
+            to { left: 110%; }
+        }
+
+        .stats, .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        .stat, .card, .panel {
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--card);
+            padding: 23px;
+        }
+        .stat strong {
+            display: block;
+            font-size: 27px;
+            color: var(--green);
+        }
+        .stat span { color: var(--muted); font-size: 14px; }
+
+        .section-title { font-size: clamp(30px, 4vw, 43px); margin: 10px 0; }
+        .section-desc { margin-bottom: 28px; }
+
+        .order-layout {
+            display: grid;
+            grid-template-columns: 1fr .8fr;
+            gap: 20px;
+            align-items: start;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .field { display: flex; flex-direction: column; gap: 7px; }
+        .field label { font-size: 14px; color: var(--muted); }
+        .full { grid-column: 1 / -1; }
+
+        .tariff-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .tariff {
+            text-align: left;
+            color: white;
+            padding: 14px 10px;
+            background: #0b1530;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+        }
+        .tariff.active {
+            border: 2px solid var(--green);
+            background: #24351e;
+        }
+        .tariff .icon { display: block; font-size: 26px; }
+        .tariff strong { display: block; }
+        .tariff small { color: var(--muted); }
+        .tariff .factor { display: block; color: var(--green); font-size: 12px; margin-top: 7px; }
+
+        .price-box { position: sticky; top: 100px; }
+        .price-label { color: var(--muted); }
+        .price-number {
+            color: var(--green);
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 900;
+            margin: 10px 0;
+        }
+        .price-detail { font-size: 13px; margin-bottom: 20px; }
+        .price-line {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 12px 0;
+            border-top: 1px solid var(--border);
+        }
+        .price-line span { color: var(--muted); }
+        .price-line strong { text-align: right; }
+        .note {
+            background: #0c1731;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 13px;
+            margin-top: 18px;
+        }
+        .message {
+            display: none;
+            padding: 13px;
+            border-radius: 12px;
+            margin-top: 15px;
+            overflow-wrap: anywhere;
+        }
+        .message.success {
+            display: block;
+            color: var(--green);
+            background: rgba(200,255,53,.1);
+        }
+        .message.error {
+            display: block;
+            color: #ff9999;
+            background: rgba(255,90,90,.1);
+        }
+        .card { transition: .2s; }
+        .card:hover { transform: translateY(-4px); border-color: var(--blue); }
+        .card-icon { font-size: 36px; margin-bottom: 10px; }
+        .card h3 { margin-bottom: 8px; }
+        .card p { font-size: 14px; }
+
+        .account-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .account-email { overflow-wrap: anywhere; }
+        .order-item {
+            margin-top: 12px;
+            padding: 15px;
+            background: #17264a;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+        }
+        .order-item small { display: block; color: var(--muted); }
+        .empty { padding: 16px 0; }
+        [hidden] { display: none !important; }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 30px 0;
+        }
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        @media(max-width: 850px) {
+            .hero, .order-layout { grid-template-columns: 1fr; }
+            .price-box { position: static; }
+            .navbar { justify-content: center; }
+            nav { justify-content: center; }
+        }
+        @media(max-width: 540px) {
+            .form-grid, .cards, .stats { grid-template-columns: 1fr; }
+            .tariff-grid { grid-template-columns: repeat(2, 1fr); }
+            .full { grid-column: auto; }
+            .panel { padding: 16px; }
+            nav { gap: 10px; font-size: 14px; }
+            .hero-visual { min-height: 240px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="container navbar">
+        <a href="#home" class="logo">One<span>Step</span></a>
+
+        <nav>
+            <a href="#home" data-t="home">Басты бет</a>
+            <a href="#taxi" data-t="taxi">Такси</a>
+            <a href="#prices" data-t="prices">Бағалар</a>
+            <a href="#media">AI Media</a>
+            <a href="#account" data-t="account">Кабинет</a>
+        </nav>
+
+        <div class="nav-actions">
+            <select class="language" id="language" aria-label="Тіл">
+                <option value="kk">ҚАЗ</option>
+                <option value="ru">РУС</option>
+                <option value="en">ENG</option>
+            </select>
+
+            <button class="btn btn-green" onclick="goAccount()" id="navLogin">
+                Кіру
+            </button>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+
+        <section class="hero" id="home">
+            <div>
+                <div class="eyebrow" data-t="eyebrow">Бір платформа. Көп мүмкіндік.</div>
+                <h1 data-t="heroTitle">Қала өмірі — бір <span>қадамда.</span></h1>
+                <p data-t="heroText">
+                    Такси, ақылды технологиялар және шығармашылық жобалар бір экожүйеде.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#taxi" class="btn btn-green" data-t="callTaxi">🚕 Такси шақыру</a>
+                    <a href="#media" class="btn btn-blue" data-t="viewMedia">AI Media-ны көру →</a>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="road"></div>
+                <div class="big-car">🚕</div>
+                <div class="small-car">🚗</div>
+            </div>
+        </section>
+
+        <div class="stats">
+            <div class="stat"><strong>6</strong><span data-t="stat1">Такси тарифі</span></div>
+            <div class="stat"><strong>3</strong><span data-t="stat2">Интерфейс тілі</span></div>
+            <div class="stat"><strong>AI</strong><span data-t="stat3">Ақылды көмекші</span></div>
+        </div>
+
+        <section id="taxi">
+            <div class="eyebrow" data-t="taxiEyebrow">Жылдам әрі ыңғайлы</div>
+            <h2 class="section-title" data-t="taxiTitle">Такси тапсырысы</h2>
+            <p class="section-desc" data-t="taxiDesc">
+                Бағытыңды енгізіп, тарифті таңда. Баға автоматты есептеледі.
+            </p>
+
+            <div class="order-layout">
+                <div class="panel">
+                    <form id="orderForm">
+                        <div class="form-grid">
+                            <div class="field">
+                                <label for="from" data-t="fromLabel">Қай жерден?</label>
+                                <input id="from" maxlength="200" required placeholder="Мысалы: Абай 25">
+                            </div>
+
+                            <div class="field">
+                                <label for="to" data-t="toLabel">Қай жерге?</label>
+                                <input id="to" maxlength="200" required placeholder="Мысалы: Медеу">
+                            </div>
+
+                            <div class="field">
+                                <label for="distance" data-t="distanceLabel">Қашықтық (км)</label>
+                                <input id="distance" type="number" min="1" max="500" value="10" required>
+                            </div>
+
+                            <div class="field">
+                                <label for="passengers" data-t="passengersLabel">Жолаушылар саны</label>
+                                <select id="passengers">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top:24px" data-t="chooseTariff">Тарифті таңда</h3>
+
+                        <div class="tariff-grid">
+                            <button type="button" class="tariff active" data-tariff="Economy">
+                                <span class="icon">🚗</span><strong>Economy</strong>
+                                <small>Үнемді</small><span class="factor">500 ₸ + 120 ₸/км</span>
+                            </button>
+
+                            <button type="button" class="tariff" data-tariff="Comfort">
+                                <span class="icon">🚘</span><strong>Comfort</strong>
+                                <small>Жайлы</small><span class="factor">700 ₸ + 160 ₸/км</span>
+                            </button>
+
+                            <button type="button" class="tariff" data-tariff="Business">
+                                <span class="icon">🚖</span><strong>Business</strong>
+                                <small>Премиум</small><span class="factor">1200 ₸ + 250 ₸/км</span>
+                            </button>
+
+                            <button type="button" class="tariff" data-tariff="Comfort+">
+                                <span class="icon">✨</span><strong>Comfort+</strong>
+                                <small>Жоғары жайлылық</small><span class="factor">900 ₸ + 190 ₸/км</span>
+                            </button>
+
+                            <button type="button" class="tariff" data-tariff="Minivan">
+                                <span class="icon">🚐</span><strong>Minivan</strong>
+                                <small>Үлкен көлік</small><span class="factor">1500 ₸ + 300 ₸/км</span>
+                            </button>
+
+                            <button type="button" class="tariff" data-tariff="Electric">
+                                <span class="icon">⚡</span><strong>Electric</strong>
+                                <small>Электрокөлік</small><span class="factor">600 ₸ + 130 ₸/км</span>
+                            </button>
+                        </div>
+
+                        <button class="btn btn-green" style="width:100%;margin-top:22px" type="submit" data-t="submitOrder">
+                            🚕 Такси шақыру
+                        </button>
+
+                        <div id="orderMessage" class="message"></div>
+                    </form>
+                </div>
+
+                <div class="panel price-box">
+                    <div class="eyebrow" data-t="estimatedPrice">Болжамды баға</div>
+                    <div class="price-number" id="priceNumber">1 700 ₸</div>
+                    <p class="price-detail" data-t="priceDisclaimer">
+                        Баға демонстрациялық тариф бойынша есептеледі.
+                    </p>
+
+                    <div class="price-line"><span data-t="selectedTariff">Тариф</span><strong id="selectedTariff">Economy</strong></div>
+                    <div class="price-line"><span data-t="distanceSummary">Қашықтық</span><strong id="distanceSummary">10 км</strong></div>
+                    <div class="price-line"><span data-t="basePrice">Бастапқы баға</span><strong id="basePrice">500 ₸</strong></div>
+                    <div class="price-line"><span data-t="tripPrice">Жол ақысы</span><strong id="tripPrice">1 200 ₸</strong></div>
+                    <div class="price-line"><span data-t="passengersSummary">Жолаушылар</span><strong id="passengersSummary">1</strong></div>
+
+                    <div class="note" data-t="priceNote">
+                        Нақты жол ұзындығы әзірге карта арқылы есептелмейді.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="prices">
+            <div class="eyebrow" data-t="pricesEyebrow">Тарифтер</div>
+            <h2 class="section-title" data-t="pricesTitle">Өзіңе лайық бағаны таңда</h2>
+            <p class="section-desc" data-t="pricesDesc">Тарифтер демонстрациялық есептеу үшін берілген.</p>
+
+            <div class="cards">
+                <div class="card"><div class="card-icon">🚗</div><h3>Economy</h3><p>500 ₸ + 120 ₸/км</p></div>
+                <div class="card"><div class="card-icon">🚘</div><h3>Comfort</h3><p>700 ₸ + 160 ₸/км</p></div>
+                <div class="card"><div class="card-icon">🚖</div><h3>Business</h3><p>1200 ₸ + 250 ₸/км</p></div>
+                <div class="card"><div class="card-icon">✨</div><h3>Comfort+</h3><p>900 ₸ + 190 ₸/км</p></div>
+                <div class="card"><div class="card-icon">🚐</div><h3>Minivan</h3><p>1500 ₸ + 300 ₸/км</p></div>
+                <div class="card"><div class="card-icon">⚡</div><h3>Electric</h3><p>600 ₸ + 130 ₸/км</p></div>
+            </div>
+
+            <div class="note">
+                <strong data-t="comparisonTitle">Басқа сервистермен салыстыру</strong>
+                <p data-t="comparisonText">
+                    Басқа сервистердің нақты бағаларын көрсету үшін рұқсат етілген API интеграциясы қажет.
+                </p>
+            </div>
+        </section>
+
+        <section id="media">
+            <div class="eyebrow">ONE STEP CREATIVE</div>
+            <h2 class="section-title">AI Media</h2>
+            <p class="section-desc" data-t="mediaDesc">Жасанды интеллект пен шығармашылыққа арналған бағыттар.</p>
+
+            <div class="cards">
+                <div class="card"><div class="card-icon">🤖</div><h3 data-t="aiContentTitle">AI контент</h3><p data-t="aiContentText">Жарнама идеялары және контент жоспарлары.</p></div>
+                <div class="card"><div class="card-icon">🎬</div><h3 data-t="productionTitle">Продакшн</h3><p data-t="productionText">Фото, видео және медиа жобалар.</p></div>
+                <div class="card"><div class="card-icon">🌟</div><h3 data-t="castingTitle">Кастинг</h3><p data-t="castingText">Шығармашылық жобаларға қатысушыларды іріктеу.</p></div>
+            </div>
+        </section>
+
+        <section id="account">
+            <div class="eyebrow" data-t="accountEyebrow">Жеке кеңістік</div>
+            <h2 class="section-title" data-t="accountTitle">Жеке кабинет</h2>
+            <p class="section-desc" data-t="accountDesc">Тіркел немесе аккаунтыңа кір.</p>
+
+            <div class="panel" style="max-width:760px">
+                <div class="form-grid">
+                    <div class="field full">
+                        <label for="authName" data-t="nameLabel">Аты-жөнің</label>
+                        <input id="authName" autocomplete="name" maxlength="100" placeholder="Атыңды енгіз">
+                    </div>
+
+                    <div class="field full">
+                        <label for="authEmail">Email</label>
+                        <input id="authEmail" type="email" autocomplete="email" maxlength="254" placeholder="example@mail.com">
+                    </div>
+
+                    <div class="field full">
+                        <label for="authPassword" data-t="passwordLabel">Пароль</label>
+                        <input id="authPassword" type="password" autocomplete="current-password" minlength="8" maxlength="72" placeholder="Кемінде 8 таңба">
+                    </div>
+                </div>
+
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px">
+                    <button class="btn btn-green" onclick="registerUser()" data-t="register">Тіркелу</button>
+                    <button class="btn btn-blue" onclick="loginUser()" data-t="login">Кіру</button>
+                    <button class="btn btn-outline" onclick="logoutUser()" data-t="logout">Шығу</button>
+                </div>
+
+                <div id="authMessage" class="message"></div>
+
+                <div id="userInfo" style="margin-top:22px" hidden>
+                    <div class="account-top">
+                        <div>
+                            <h3 id="loggedName"></h3>
+                            <p id="loggedEmail" class="account-email"></p>
+                        </div>
+                        <button class="btn btn-outline" onclick="loadMyOrders()" data-t="refreshOrders">Тапсырыстарды жаңарту</button>
+                    </div>
+                    <h3 data-t="myOrders">Менің тапсырыстарым</h3>
+                    <div id="myOrders"><p class="empty" data-t="noOrders">Әзірге тапсырыс жоқ.</p></div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<footer>
+    <div class="container footer-content">
+        <div class="logo">One<span>Step</span></div>
+        <p>© 2026 OneStep — Mobility & AI Media</p>
+        <p data-t="footerText">Бір платформа. Көп мүмкіндік.</p>
+    </div>
+</footer>
+
+<script>
+    "use strict";
+
+    const tariffs = {
+        Economy: {base: 500, perKm: 120},
+        Comfort: {base: 700, perKm: 160},
+        Business: {base: 1200, perKm: 250},
+        "Comfort+": {base: 900, perKm: 190},
+        Minivan: {base: 1500, perKm: 300},
+        Electric: {base: 600, perKm: 130}
+    };
+
+    let selectedTariff = "Economy";
+    let currentUser = null;
+    let currentLanguage = "kk";
+
+    const money = value =>
+        new Intl.NumberFormat("kk-KZ", {maximumFractionDigits: 0}).format(value) + " ₸";
+
+    function calculatePrice() {
+        const distance = Number(document.getElementById("distance").value);
+        const passengers = Number(document.getElementById("passengers").value);
+        const tariff = tariffs[selectedTariff];
+
+        if (!Number.isFinite(distance) || distance < 1 || distance > 500) {
+            document.getElementById("priceNumber").textContent = "—";
+            return;
+        }
+
+        const trip = distance * tariff.perKm;
+        const total = tariff.base + trip;
+
+        document.getElementById("priceNumber").textContent = money(total);
+        document.getElementById("selectedTariff").textContent = selectedTariff;
+        document.getElementById("distanceSummary").textContent = distance + " км";
+        document.getElementById("basePrice").textContent = money(tariff.base);
+        document.getElementById("tripPrice").textContent = money(trip);
+        document.getElementById("passengersSummary").textContent = passengers;
+    }
+
+    document.querySelectorAll(".tariff").forEach(button => {
+        button.addEventListener("click", () => {
+            document.querySelectorAll(".tariff").forEach(item => item.classList.remove("active"));
+            button.classList.add("active");
+            selectedTariff = button.dataset.tariff;
+            calculatePrice();
+        });
+    });
+
+    document.getElementById("distance").addEventListener("input", calculatePrice);
+    document.getElementById("passengers").addEventListener("change", calculatePrice);
+
+    function showMessage(id, message, success) {
+        const box = document.getElementById(id);
+        box.textContent = message;
+        box.className = "message " + (success ? "success" : "error");
+    }
+
+    document.getElementById("orderForm").addEventListener("submit", async event => {
+        event.preventDefault();
+
+        const from = document.getElementById("from").value.trim();
+        const to = document.getElementById("to").value.trim();
+        const distance = Number(document.getElementById("distance").value);
+        const passengers = Number(document.getElementById("passengers").value);
+
+        if (!from || !to || distance < 1 || distance > 500) {
+            showMessage("orderMessage", "Бағыт пен 1–500 км аралығындағы қашықтықты енгіз.", false);
+            return;
+        }
+
+        const price = tariffs[selectedTariff].base + tariffs[selectedTariff].perKm * distance;
+
+        try {
+            const response = await fetch("/api/orders", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({from, to, tariff: selectedTariff, passengers})
+            });
+
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok) {
+                throw new Error(data.message || "Тапсырыс қабылданбады.");
+            }
+
+            showMessage(
+                "orderMessage",
+                "Тапсырыс қабылданды! №" + data.id + ". Болжамды баға: " + money(price),
+                true
+            );
+
+            await loadMyOrders();
+
+        } catch (error) {
+            showMessage("orderMessage", error.message || "Серверге қосылу қатесі.", false);
+        }
+    });
+
+    async function registerUser() {
+        const name = document.getElementById("authName").value.trim();
+        const email = document.getElementById("authEmail").value.trim();
+        const password = document.getElementById("authPassword").value;
+
+        if (!name || !email || password.length < 8) {
+            showMessage("authMessage", "Аты-жөніңді, email-ді енгіз. Пароль кемінде 8 таңба болсын.", false);
+            return;
+        }
+
+        try {
+            const response = await fetch("/api/auth/register", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({name, email, password})
+            });
+
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok) {
+                throw new Error(data.message || "Тіркелу сәтсіз аяқталды.");
+            }
+
+            showMessage("authMessage", "Тіркелу сәтті аяқталды. Енді аккаунтқа кір.", true);
+            document.getElementById("authPassword").value = "";
+
+        } catch (error) {
+            showMessage("authMessage", error.message || "Серверге қосылу қатесі.", false);
+        }
+    }
+
+    async function loginUser() {
+        const email = document.getElementById("authEmail").value.trim();
+        const password = document.getElementById("authPassword").value;
+
+        if (!email || !password) {
+            showMessage("authMessage", "Email мен парольді енгіз.", false);
+            return;
+        }
+
+        try {
+            const response = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({email, password})
+            });
+
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok) {
+                throw new Error(data.message || "Кіру сәтсіз аяқталды.");
+            }
+
+            currentUser = {id: data.id, name: data.name, email: data.email};
+
+            document.getElementById("userInfo").hidden = false;
+            document.getElementById("loggedName").textContent = data.name;
+            document.getElementById("loggedEmail").textContent = data.email;
+            document.getElementById("navLogin").textContent = data.name;
+
+            showMessage("authMessage", "Сәтті кірдің!", true);
+
+            document.getElementById("authPassword").value = "";
+
+            await loadMyOrders();
+
+        } catch (error) {
+            showMessage("authMessage", error.message || "Серверге қосылу қатесі.", false);
+        }
+    }
+
+    function logoutUser() {
+        currentUser = null;
+        document.getElementById("userInfo").hidden = true;
+        document.getElementById("authPassword").value = "";
+        document.getElementById("navLogin").textContent = translations[currentLanguage].login;
+        showMessage("authMessage", "Кабинеттен шықтың.", true);
+    }
+
+    function goAccount() {
+        document.getElementById("account").scrollIntoView({behavior: "smooth"});
+    }
+
+    async function loadMyOrders() {
+        const container = document.getElementById("myOrders");
+
+        if (!currentUser) {
+            return;
+        }
+
+        try {
+            const response = await fetch("/api/orders");
+
+            if (!response.ok) {
+                throw new Error("Тапсырыстарды жүктеу мүмкін болмады.");
+            }
+
+            const orders = await response.json();
+            container.replaceChildren();
+
+            if (!orders.length) {
+                const empty = document.createElement("p");
+                empty.className = "empty";
+                empty.textContent = translations[currentLanguage].noOrders;
+                container.appendChild(empty);
+                return;
+            }
+
+            orders.forEach(order => {
+                const item = document.createElement("div");
+                item.className = "order-item";
+
+                const route = document.createElement("strong");
+                route.textContent = (order.pickupAddress || "") + " → " +
+                    (order.destinationAddress || "");
+
+                const details = document.createElement("small");
+                details.textContent = (order.tariff || "") + " · №" + order.id;
+
+                const status = document.createElement("small");
+                status.textContent = order.status || "";
+
+                item.append(route, details, status);
+                container.appendChild(item);
+            });
+
+        } catch (error) {
+            container.textContent = error.message;
+        }
+    }
+
+    const translations = {
+        kk: {
+            home: "Басты бет", taxi: "Такси", prices: "Бағалар", account: "Кабинет",
+            login: "Кіру", eyebrow: "Бір платформа. Көп мүмкіндік.",
+            heroTitle: 'Қала өмірі — бір <span>қадамда.</span>',
+            heroText: "Такси, ақылды технологиялар және шығармашылық жобалар бір экожүйеде.",
+            callTaxi: "🚕 Такси шақыру", viewMedia: "AI Media-ны көру →",
+            stat1: "Такси тарифі", stat2: "Интерфейс тілі", stat3: "Ақылды көмекші",
+            taxiEyebrow: "Жылдам әрі ыңғайлы", taxiTitle: "Такси тапсырысы",
+            taxiDesc: "Бағытыңды енгізіп, тарифті таңда. Баға автоматты есептеледі.",
+            fromLabel: "Қай жерден?", toLabel: "Қай жерге?",
+            distanceLabel: "Қашықтық (км)", passengersLabel: "Жолаушылар саны",
+            chooseTariff: "Тарифті таңда", submitOrder: "🚕 Такси шақыру",
+            estimatedPrice: "Болжамды баға",
+            priceDisclaimer: "Баға демонстрациялық тариф бойынша есептеледі.",
+            selectedTariff: "Тариф", distanceSummary: "Қашықтық",
+            basePrice: "Бастапқы баға", tripPrice: "Жол ақысы",
+            passengersSummary: "Жолаушылар",
+            priceNote: "Нақты жол ұзындығы әзірге карта арқылы есептелмейді.",
+            pricesEyebrow: "Тарифтер", pricesTitle: "Өзіңе лайық бағаны таңда",
+            pricesDesc: "Тарифтер демонстрациялық есептеу үшін берілген.",
+            comparisonTitle: "Басқа сервистермен салыстыру",
+            comparisonText: "Нақты салыстыру үшін рұқсат етілген API интеграциясы қажет.",
+            mediaDesc: "Жасанды интеллект пен шығармашылыққа арналған бағыттар.",
+            aiContentTitle: "AI контент", aiContentText: "Жарнама идеялары және контент жоспарлары.",
+            productionTitle: "Продакшн", productionText: "Фото, видео және медиа жобалар.",
+            castingTitle: "Кастинг", castingText: "Шығармашылық жобаларға қатысушыларды іріктеу.",
+            accountEyebrow: "Жеке кеңістік", accountTitle: "Жеке кабинет",
+            accountDesc: "Тіркел немесе аккаунтыңа кір.", nameLabel: "Аты-жөнің",
+            passwordLabel: "Пароль", register: "Тіркелу", logout: "Шығу",
+            refreshOrders: "Тапсырыстарды жаңарту", myOrders: "Менің тапсырыстарым",
+            noOrders: "Әзірге тапсырыс жоқ.", footerText: "Бір платформа. Көп мүмкіндік."
+        },
+        ru: {
+            home: "Главная", taxi: "Такси", prices: "Цены", account: "Кабинет",
+            login: "Войти", eyebrow: "Одна платформа. Много возможностей.",
+            heroTitle: 'Городская жизнь — в одном <span>шаге.</span>',
+            heroText: "Такси, технологии и творческие проекты в одной экосистеме.",
+            callTaxi: "🚕 Вызвать такси", viewMedia: "Смотреть AI Media →",
+            stat1: "Тарифов такси", stat2: "Языка интерфейса", stat3: "Умный помощник",
+            taxiEyebrow: "Быстро и удобно", taxiTitle: "Заказ такси",
+            taxiDesc: "Укажи маршрут и выбери тариф. Цена рассчитывается автоматически.",
+            fromLabel: "Откуда?", toLabel: "Куда?", distanceLabel: "Расстояние (км)",
+            passengersLabel: "Количество пассажиров", chooseTariff: "Выбери тариф",
+            submitOrder: "🚕 Вызвать такси", estimatedPrice: "Предварительная цена",
+            priceDisclaimer: "Цена рассчитана по демонстрационному тарифу.",
+            selectedTariff: "Тариф", distanceSummary: "Расстояние",
+            basePrice: "Базовая цена", tripPrice: "Стоимость пути",
+            passengersSummary: "Пассажиры",
+            priceNote: "Точная длина маршрута пока не рассчитывается по карте.",
+            pricesEyebrow: "Тарифы", pricesTitle: "Выбери подходящую цену",
+            pricesDesc: "Тарифы приведены для демонстрационного расчёта.",
+            comparisonTitle: "Сравнение с другими сервисами",
+            comparisonText: "Для сравнения требуется разрешённая API-интеграция.",
+            mediaDesc: "Направления для ИИ и творчества.",
+            aiContentTitle: "AI-контент", aiContentText: "Рекламные идеи и контент-планы.",
+            productionTitle: "Продакшн", productionText: "Фото-, видео- и медиапроекты.",
+            castingTitle: "Кастинг", castingText: "Отбор участников творческих проектов.",
+            accountEyebrow: "Личное пространство", accountTitle: "Личный кабинет",
+            accountDesc: "Зарегистрируйся или войди.", nameLabel: "Имя",
+            passwordLabel: "Пароль", register: "Регистрация", logout: "Выйти",
+            refreshOrders: "Обновить заказы", myOrders: "Мои заказы",
+            noOrders: "Заказов пока нет.", footerText: "Одна платформа. Много возможностей."
+        },
+        en: {
+            home: "Home", taxi: "Taxi", prices: "Prices", account: "Account",
+            login: "Log in", eyebrow: "One platform. Many possibilities.",
+            heroTitle: 'City life in one <span>step.</span>',
+            heroText: "Taxi, smart technology and creative projects in one ecosystem.",
+            callTaxi: "🚕 Book a taxi", viewMedia: "Explore AI Media →",
+            stat1: "Taxi tariffs", stat2: "Interface languages", stat3: "Smart assistant",
+            taxiEyebrow: "Fast and convenient", taxiTitle: "Taxi booking",
+            taxiDesc: "Enter your route and select a tariff. Price is calculated automatically.",
+            fromLabel: "Pickup location", toLabel: "Destination",
+            distanceLabel: "Distance (km)", passengersLabel: "Passengers",
+            chooseTariff: "Choose a tariff", submitOrder: "🚕 Book a taxi",
+            estimatedPrice: "Estimated price",
+            priceDisclaimer: "Price calculated using demo tariffs.",
+            selectedTariff: "Tariff", distanceSummary: "Distance",
+            basePrice: "Base fare", tripPrice: "Distance fare",
+            passengersSummary: "Passengers",
+            priceNote: "Exact route distance is not yet calculated using a map.",
+            pricesEyebrow: "Tariffs", pricesTitle: "Choose the right price",
+            pricesDesc: "Tariffs are demonstration calculations.",
+            comparisonTitle: "Compare with other services",
+            comparisonText: "An authorized API integration is required for comparison.",
+            mediaDesc: "Creative directions powered by AI.",
+            aiContentTitle: "AI content", aiContentText: "Advertising ideas and content plans.",
+            productionTitle: "Production", productionText: "Photo, video and media projects.",
+            castingTitle: "Casting", castingText: "Selecting participants for creative projects.",
+            accountEyebrow: "Personal space", accountTitle: "Personal account",
+            accountDesc: "Register or log in.", nameLabel: "Full name",
+            passwordLabel: "Password", register: "Register", logout: "Log out",
+            refreshOrders: "Refresh orders", myOrders: "My orders",
+            noOrders: "No orders yet.", footerText: "One platform. Many possibilities."
+        }
+    };
+
+    function setLanguage(language) {
+        currentLanguage = language;
+        document.documentElement.lang = language;
+
+        document.querySelectorAll("[data-t]").forEach(element => {
+            const value = translations[language][element.dataset.t];
+            if (value !== undefined) element.innerHTML = value;
+        });
+
+        try {
+            localStorage.setItem("onestep_language", language);
+        } catch (error) {
+            console.error(error);
+        }
+
+        calculatePrice();
+    }
+
+    document.getElementById("language").addEventListener("change", event => {
+        setLanguage(event.target.value);
+    });
+
+    try {
+        const savedLanguage = localStorage.getItem("onestep_language");
+        if (savedLanguage && translations[savedLanguage]) {
+            currentLanguage = savedLanguage;
+            document.getElementById("language").value = savedLanguage;
+        }
+    } catch (error) {
+        console.error(error);
+    }
+
+    function initPage() {
+        setLanguage(currentLanguage);
+        calculatePrice();
+    }
+
+    initPage();
+</script>
+
+</body>
+</html>
